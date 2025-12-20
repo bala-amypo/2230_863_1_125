@@ -26,8 +26,39 @@ public class ProfitCalculationRecord {
     }
 
     // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public MenuItem getMenuItem() { return menuItem; }
-    public void
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public MenuItem getMenuItem() {
+        return menuItem;
+    }
+
+    public void setMenuItem(MenuItem menuItem) {
+        this.menuItem = menuItem;
+    }
+
+    public BigDecimal getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(BigDecimal totalCost) {
+        this.totalCost = totalCost;
+    }
+
+    public BigDecimal getProfitMargin() {
+        return profitMargin;
+    }
+
+    public void setProfitMargin(BigDecimal profitMargin) {
+        this.profitMargin = profitMargin;
+    }
+
+    public Timestamp getCalculatedAt() {
+        return calculatedAt;
+    }
+}
