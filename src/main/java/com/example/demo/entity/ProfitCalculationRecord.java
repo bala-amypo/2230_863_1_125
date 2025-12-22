@@ -24,8 +24,7 @@ public class ProfitCalculationRecord {
     public void onCreate() {
         calculatedAt = new Timestamp(System.currentTimeMillis());
     }
-
-    // Getters and Setters
+    
     public Long getId() {
         return id;
     }

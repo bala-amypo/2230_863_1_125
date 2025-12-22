@@ -17,8 +17,7 @@ public class Category {
 
     @ManyToMany(mappedBy = "categories")
     private Set<MenuItem> menuItems;
-
-    // Getters and Setters
+    
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
