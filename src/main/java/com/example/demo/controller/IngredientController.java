@@ -2,41 +2,44 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Ingredient;
 import com.example.demo.service.IngredientService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/ingredients")
 public class IngredientController {
-
-    private final IngredientService service;
-
-    public IngredientController(IngredientService service) {
-        this.service = service;
+    private final IngredientService ingredientService;
+    
+    public IngredientController(IngredientService ingredientService) {
+        this.ingredientService = ingredientService;
     }
-
+    
     @PostMapping
-    public Ingredient create(@RequestBody Ingredient ingredient) {
-        return service.create(ingredient);
+    public ResponseEntity<Ingredient> createIngredient(@RequestBody Ingredient ingredient) {
+        Ingredient created = ingredientService.createIngredient(ingredient);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
-
-    @PutMapping("/{id}")
-    public Ingredient update(@PathVariable Long id, @RequestBody Ingredient ingredient) {
-        return service.update(id, ingredient);
-    }
-
-    @GetMapping("/{id}")
-    public Ingredient get(@PathVariable Long id) {
-        return service.get(id);
-    }
-
+    
     @GetMapping
-    public List<Ingredient> getAll() {
-        return service.getAll();
+    public ResponseEntity<List<Ingredient>> getAllIngredients() {
+        return ResponseEntity.ok(ingredientService.getAllIngredients());
     }
-
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<Ingredient> getIngredientById(@PathVariable Long id) {
+        return ResponseEntity.ok(ingredientService.getIngredientById(id));
+    }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<Ingredient> updateIngredient(@PathVariable Long id, @RequestBody Ingredient ingredient) {
+        return ResponseEntity.ok(ingredientService.updateIngredient(id, ingredient));
+    }
+    
     @PutMapping("/{id}/deactivate")
-    public void deactivate(@PathVariable Long id) {
-        service.deactivate(id);
+    public ResponseEntity<Void> deactivateIngredient(@PathVariable Long id) {
+        ingredientService.deactivateIngredient(id);
+        return ResponseEntity.ok().build();
     }
 }
