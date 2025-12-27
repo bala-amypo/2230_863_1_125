@@ -6,51 +6,73 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.IngredientRepository;
 import com.example.demo.service.IngredientService;
 import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.util.List;
 
 @Service
 public class IngredientServiceImpl implements IngredientService {
+
     private final IngredientRepository ingredientRepository;
-    
+
     public IngredientServiceImpl(IngredientRepository ingredientRepository) {
         this.ingredientRepository = ingredientRepository;
     }
-    
+
     @Override
     public Ingredient createIngredient(Ingredient ingredient) {
-        if (ingredientRepository.findByNameIgnoreCase(ingredient.getName()).isPresent()) {
-            throw new BadRequestException("Ingredient name already exists");
+
+        // 🔒 NULL CHECK (PREVENTS 500 ERROR)
+        if (ingredient.getCostPerUnit() == null) {
+            throw new BadRequestException("Cost per unit is required");
         }
+
         if (ingredient.getCostPerUnit().compareTo(BigDecimal.ZERO) <= 0) {
             throw new BadRequestException("Cost per unit must be greater than 0");
         }
+
+        if (ingredientRepository.findByNameIgnoreCase(ingredient.getName()).isPresent()) {
+            throw new BadRequestException("Ingredient name already exists");
+        }
+
+        ingredient.setId(null);     // FORCE CREATE
         ingredient.setActive(true);
+
         return ingredientRepository.save(ingredient);
     }
-    
+
     @Override
     public Ingredient updateIngredient(Long id, Ingredient ingredient) {
+
         Ingredient existing = ingredientRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Ingredient not found"));
-        
+                .orElseThrow(() -> new ResourceNotFoundException("Ingredient not found"));
+
+        if (ingredient.getCostPerUnit() == null) {
+            throw new BadRequestException("Cost per unit is required");
+        }
+
+        if (ingredient.getCostPerUnit().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new BadRequestException("Cost per unit must be greater than 0");
+        }
+
         existing.setName(ingredient.getName());
         existing.setUnit(ingredient.getUnit());
         existing.setCostPerUnit(ingredient.getCostPerUnit());
+
         return ingredientRepository.save(existing);
     }
-    
+
     @Override
     public Ingredient getIngredientById(Long id) {
         return ingredientRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Ingredient not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Ingredient not found"));
     }
-    
+
     @Override
     public List<Ingredient> getAllIngredients() {
         return ingredientRepository.findAll();
     }
-    
+
     @Override
     public void deactivateIngredient(Long id) {
         Ingredient ingredient = getIngredientById(id);
