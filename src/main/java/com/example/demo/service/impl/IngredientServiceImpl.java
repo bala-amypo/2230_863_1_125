@@ -22,7 +22,6 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public Ingredient createIngredient(Ingredient ingredient) {
 
-        // 🔒 NULL CHECK (PREVENTS 500 ERROR)
         if (ingredient.getCostPerUnit() == null) {
             throw new BadRequestException("Cost per unit is required");
         }
@@ -35,7 +34,7 @@ public class IngredientServiceImpl implements IngredientService {
             throw new BadRequestException("Ingredient name already exists");
         }
 
-        ingredient.setId(null);     // FORCE CREATE
+        ingredient.setId(null);     
         ingredient.setActive(true);
 
         return ingredientRepository.save(ingredient);
